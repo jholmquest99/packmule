@@ -26,7 +26,8 @@ trap tidy EXIT
 [ "$(uname -s)" = "Darwin" ] || fail "This command is for Mac. On Windows, use the PowerShell command on the download page."
 [ "$(uname -m)" = "arm64" ]  || fail "Packmule needs a Mac with an Apple chip (M1 or newer). This Mac has an Intel chip."
 [ "$(sw_vers -productVersion | cut -d. -f1)" -ge 13 ] || fail "Packmule needs macOS 13 or newer."
-if pgrep -f "Packmule.app/Contents/MacOS/Packmule" >/dev/null 2>&1; then
+# (looks at the programs that are running, not at the text of their commands, so it cannot be fooled by its own name)
+if ps -axo comm= | grep -q "Packmule.app/Contents/MacOS/Packmule$"; then
   fail "Packmule is open. Quit it, then run this command again."
 fi
 
